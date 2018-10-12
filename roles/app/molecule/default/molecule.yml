@@ -5,13 +5,16 @@ driver:
   name: docker
 lint:
   name: yamllint
+  enabled: false
 platforms:
   - name: instance
-    image: centos:7
+    image: debian:9
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
+    enabled: false
+  log: true
 scenario:
   name: default
 verifier:
