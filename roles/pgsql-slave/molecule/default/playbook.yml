@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: pgsql-slave
+      dbmaster_private_ip: "10.10.10.10"
+      dbslave_private_ip: "10.10.10.11"
