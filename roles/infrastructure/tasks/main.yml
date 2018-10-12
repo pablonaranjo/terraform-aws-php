@@ -1,4 +1,14 @@
 ---
+- name: install unzip
+  apt:
+    name: unzip
+
+- name: Install Terraform
+  unarchive:
+    src: https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
+    dest: /bin/
+    remote_src: yes
+
 - name: Terraform Apply
   terraform:
     project_path: "{{ playbook_dir }}/terraform/"
@@ -11,6 +21,8 @@
       key_pair: "{{ aws_key_pair }}"
       region: "{{ region }}"
   register: tf_output
+  tags:
+    - notest
 
 - name: Update inventory
   add_host:
@@ -21,9 +33,13 @@
     - { ip: "{{ tf_output['outputs']['app1_ip']['value'] }}", group: "app" }
     - { ip: "{{ tf_output['outputs']['dbmaster_ip']['value'] }}", group: "dbmaster"}
     - { ip: "{{ tf_output['outputs']['dbslave_ip']['value'] }}", group: "dbslave" }
+  tags:
+    - notest
 
 - name: Set Facts
   set_fact:
      app1_private_ip: "{{ tf_output['outputs']['app1_private_ip']['value'] }}"
      dbmaster_private_ip: "{{ tf_output['outputs']['dbmaster_private_ip']['value'] }}"
      dbslave_private_ip: "{{ tf_output['outputs']['dbslave_private_ip']['value'] }}"
+  tags:
+    - notest

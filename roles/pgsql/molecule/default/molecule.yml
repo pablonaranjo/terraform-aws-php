@@ -1,0 +1,24 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  enabled: false
+platforms:
+  - name: instance
+    image: minimum2scp/systemd-stretch
+    priviliged: true
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: false
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

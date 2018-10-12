@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: infrastructure
+      aws_access_key: "123"
+      aws_secret_key: "123"
+      aws_subnet_id: "s-123"
+      aws_security_group: "sg-123"
+      aws_key_pair: "testtf"
+      region: "eu-west-1"

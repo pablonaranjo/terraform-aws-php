@@ -1,8 +1,9 @@
 *.retry
-group_vars/all.yml
+*/all.yml
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 *.pem
+*/test_env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

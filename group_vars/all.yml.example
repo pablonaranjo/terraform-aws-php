@@ -3,4 +3,7 @@
   aws_access_key: "<ACCESSKEY>"
   aws_secret_key: "<SECRETKEY>"
   region: "<REGION>"
-  ansible_user: "admin" 
+  ansible_user: "" 
+  aws_subnet_id: ""
+  aws_security_group: ""
+  aws_key_pair: "testtf"
