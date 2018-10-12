@@ -2,6 +2,7 @@
 group_vars/all.yml
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
+*.pem
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

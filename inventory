@@ -1,0 +1,8 @@
+[localhost]
+localhost
+
+[dbslave]
+34.245.215.207
+[dbmaster]
+52.16.137.109
+[app]

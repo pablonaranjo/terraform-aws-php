@@ -1,0 +1,26 @@
+---
+- name: Terraform Apply
+  terraform:
+    project_path: "{{ playbook_dir }}/terraform/"
+    state: "present"
+    variables:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+  register: tf_output
+
+- name: Update inventory
+  add_host:
+    hostname: "{{ item['ip'] }}"
+    groups:
+      - "{{ item['group'] }}"
+  with_items:
+    - { ip: "{{ tf_output['outputs']['app1_ip']['value'] }}", group: "app" }
+    - { ip: "{{ tf_output['outputs']['dbmaster_ip']['value'] }}", group: "dbmaster"}
+    - { ip: "{{ tf_output['outputs']['dbslave_ip']['value'] }}", group: "dbslave" }
+
+- name: Set Facts
+  set_fact:
+     app1_private_ip: "{{ tf_output['outputs']['app1_private_ip']['value'] }}"
+     dbmaster_private_ip: "{{ tf_output['outputs']['dbmaster_private_ip']['value'] }}"
+     dbslave_private_ip: "{{ tf_output['outputs']['dbslave_private_ip']['value'] }}"

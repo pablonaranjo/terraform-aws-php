@@ -1,0 +1,54 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - infrastructure
+  tags:
+    - infra
+
+- hosts:
+   - app
+   - dbmaster
+   - dbslave
+  become: true
+  vars:
+   - app1_private_ip: "{{ hostvars['localhost']['app1_private_ip'] }}"
+   - dbmaster_private_ip: "{{ hostvars['localhost']['dbmaster_private_ip'] }}"
+   - dbslave_private_ip: "{{ hostvars['localhost']['dbslave_private_ip'] }}"
+
+  gather_facts: no
+  tasks:
+
+    - name: Wait servers are ready
+      wait_for_connection:
+
+    - name: Add IP address of all hosts to all hosts
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ item.ip }} {{ item.name }}"
+        state: present
+      with_items:
+        - { name: app1, ip: "{{ app1_private_ip }}" }
+        - { name: dbmaster, ip: "{{ dbmaster_private_ip }}" }
+        - { name: dbslave, ip: "{{ dbslave_private_ip }}" }
+  tags: pre-config
+
+- hosts: app
+  become: true
+  roles:
+    - app
+  tags:
+    - app
+
+- hosts:
+    - dbmaster
+    - dbslave
+  vars:
+   - dbmaster_private_ip: "172.31.25.116"
+   - dbslave_private_ip: "172.31.19.233"
+  become: true
+  roles:
+    - pgsql
+  tags:
+    - pgsql

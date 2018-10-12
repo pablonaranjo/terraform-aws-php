@@ -1,0 +1,41 @@
+---
+
+- name: Install Dependencies
+  apt:
+    name: "{{ item }}"
+    update_cache: True
+    state: "latest"
+  with_items:
+    - docker-compose
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    - php7.0-pgsql
+
+- name: Add apt key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add apt repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+    state: present
+
+- name: Install Docker CE
+  apt:
+    name: "docker-ce"
+    update_cache: True
+    state: "latest"
+
+- name: Copy App folder
+  copy:
+    src: App
+    dest: /
+
+- name: Start Application
+  docker_service:
+    build: True
+    project_src: /App
