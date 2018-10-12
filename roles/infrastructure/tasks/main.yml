@@ -6,6 +6,9 @@
     variables:
       aws_access_key: "{{ aws_access_key }}"
       aws_secret_key: "{{ aws_secret_key }}"
+      security_group: "{{ aws_security_group }}"
+      subnet_id: "{{ aws_subnet_id }}"
+      key_pair: "{{ aws_key_pair }}"
       region: "{{ region }}"
   register: tf_output
 

@@ -11,11 +11,15 @@ variable "aws_access_key" {
 }
 
 variable "security_group" {
-  default = "sg-2b472a54"
+  default = ""
 }
 
 variable "subnet_id" {
-  default = "subnet-83f192cb"
+  default = ""
+}
+
+variable "key_pair" {
+  default = ""
 }
 
 provider "aws" {
@@ -45,7 +49,7 @@ resource "aws_instance" "app1" {
   security_groups = ["${var.security_group}"]
   subnet_id       = "${var.subnet_id}"
   instance_type   = "t2.micro"
-  key_name        = "paxful"
+  key_name        = "${var.key_pair}"
 
   tags {
     Name = "app1"
@@ -57,7 +61,7 @@ resource "aws_instance" "dbmaster" {
   security_groups = ["${var.security_group}"]
   subnet_id       = "${var.subnet_id}"
   instance_type   = "t2.micro"
-  key_name        = "paxful"
+  key_name        = "${var.key_pair}"
 
   tags {
     Name = "dbmaster"
@@ -69,7 +73,7 @@ resource "aws_instance" "dbslave" {
   security_groups = ["${var.security_group}"]
   subnet_id       = "${var.subnet_id}"
   instance_type   = "t2.micro"
-  key_name        = "paxful"
+  key_name        = "${var.key_pair}"
 
   tags {
     Name = "dbslave"
