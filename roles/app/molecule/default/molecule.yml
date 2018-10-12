@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  enabled: false
+platforms:
+  - name: instance
+    image: debian:9
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: false
+  log: true
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

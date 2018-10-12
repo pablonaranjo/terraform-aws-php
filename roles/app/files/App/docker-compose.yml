@@ -1,0 +1,10 @@
+---
+version: '2'
+
+services:
+      app:
+        build: .
+        network_mode: host
+        privileged: true
+        ports:
+          - "80:80"

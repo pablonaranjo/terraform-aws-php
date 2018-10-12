@@ -1,0 +1,84 @@
+---
+
+- name: Install Dependencies
+  apt:
+    name: ['postgresql-9.6', 'postgresql-contrib-9.6', 'python-psycopg2', 'acl']
+
+- name: Mount /var/tmp with acl
+  shell: "sudo /bin/mount -t tmpfs tmpfs /var/tmp"
+  when: inventory_hostname in groups['dbmaster']
+  tags:
+    - notest
+
+- name: Enable service postgresql
+  systemd:
+    name: postgresql
+    enabled: yes
+  tags:
+    - notest
+
+- name: Copy postgresql.conf
+  template:
+    src: postgresql.conf.j2
+    dest: /etc/postgresql/9.6/main/postgresql.conf
+
+- name: Copy pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: /etc/postgresql/9.6/main/pg_hba.conf
+
+- name: Copy pass file
+  template:
+    src: .pgpass.j2
+    dest: /var/tmp/.pgpass
+    owner: postgres
+    group: postgres
+    mode: 0600
+
+
+- name: Restart postgres
+  systemd:
+    state: restarted
+    name: postgresql
+  tags:
+    - notest
+
+- name: Stop postgres dbslave
+  systemd:
+    state: stopped
+    name: postgresql
+  tags:
+    - notest
+
+- name: Clean main directory
+  shell: mv /var/lib/postgresql/9.6/main /var/lib/postgresql/9.6/main-bkp
+  ignore_errors: True
+
+- name: Create main directory
+  file:
+    path: /var/lib/postgresql/9.6/main
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: Copy data from Master to Slave
+  become: True
+  become_user: postgres
+  shell: /usr/bin/pg_basebackup -h dbmaster -w -U replica -D /var/lib/postgresql/9.6/main -P --xlog
+  environment:
+    PGPASSFILE: "/var/tmp/.pgpass"
+  tags:
+    - notest
+
+- name: Copy recovery.conf on dbslave
+  template:
+    src: recovery.conf.j2
+    dest: /var/lib/postgresql/9.6/main/recovery.conf
+
+- name: Start postgres dbslave
+  systemd:
+    state: started
+    name: postgresql
+  tags:
+    - notest
