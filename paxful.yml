@@ -34,21 +34,31 @@
         - { name: dbslave, ip: "{{ dbslave_private_ip }}" }
   tags: pre-config
 
+- hosts:
+    - dbmaster
+  vars:
+   - dbmaster_private_ip: "{{ hostvars['localhost']['dbmaster_private_ip'] }}"
+   - dbslave_private_ip: "{{ hostvars['localhost']['dbslave_private_ip'] }}"
+  become: true
+  roles:
+    - pgsql
+  tags:
+    - pgsql
+
+- hosts:
+    - dbslave
+  vars:
+   - dbmaster_private_ip: "{{ hostvars['localhost']['dbmaster_private_ip'] }}"
+   - dbslave_private_ip: "{{ hostvars['localhost']['dbslave_private_ip'] }}"
+  become: true
+  roles:
+    - pgsql-slave
+  tags:
+    - pgsql
+
 - hosts: app
   become: true
   roles:
     - app
   tags:
     - app
-
-- hosts:
-    - dbmaster
-    - dbslave
-  vars:
-   - dbmaster_private_ip: "172.31.25.116"
-   - dbslave_private_ip: "172.31.19.233"
-  become: true
-  roles:
-    - pgsql
-  tags:
-    - pgsql
