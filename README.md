@@ -18,4 +18,14 @@ How to run?
 - run the playbook:
     - ansible-playbook playbook.yml
 
+Requirements:
+
+- AWS Account with:
+    - VPC+Subnet created
+    - Security group created allowing:
+	- PostresSQL (Port 5432) internally
+	- SSH (Port 22) From where the playbook runs
+    - PEM file
+ 
+
 Tested using Ubuntu 18.04

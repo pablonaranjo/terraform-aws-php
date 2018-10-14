@@ -30,7 +30,7 @@
 - name: Copy pass file
   template:
     src: .pgpass.j2
-    dest: /var/tmp/.pgpass
+    dest: /var/lib/postgresql/.pgpass
     owner: postgres
     group: postgres
     mode: 0600
@@ -67,7 +67,7 @@
   become_user: postgres
   shell: /usr/bin/pg_basebackup -h dbmaster -w -U replica -D /var/lib/postgresql/9.6/main -P --xlog
   environment:
-    PGPASSFILE: "/var/tmp/.pgpass"
+    PGPASSFILE: "/var/lib/postgresql/.pgpass"
   tags:
     - notest
 
