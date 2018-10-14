@@ -1,4 +1,4 @@
 standby_mode = 'on'
-primary_conninfo = 'host="{{ dbmaster_private_ip }}" port=5432 user=replica application_name=dbslave'
+primary_conninfo = 'host={{ dbmaster_private_ip }} port=5432 user=replica password=replica123 application_name=dbslave'
 restore_command = 'cp /var/lib/postgresql/9.6/main/archive/%f %p'
 trigger_file = '/tmp/postgresql.trigger.5432'

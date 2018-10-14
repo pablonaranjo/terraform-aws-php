@@ -16,7 +16,9 @@ synchronous_commit = local
 max_wal_senders = 2
 wal_keep_segments = 10
 synchronous_standby_names = 'dbslave'
+{% if (inventory_hostname in groups.dbslave) %}
 hot_standby = on
+{% endif %}
 log_line_prefix = '%m [%p] %q%u@%d '
 log_timezone = 'UTC'
 cluster_name = '9.6/main'
@@ -26,5 +28,9 @@ timezone = 'UTC'
 lc_messages = 'en_US.UTF-8'
 lc_monetary = 'en_US.UTF-8'
 lc_numeric = 'en_US.UTF-8'
-lc_time = 'en_US.UTF-8'	
+lc_time = 'en_US.UTF-8'
 default_text_search_config = 'pg_catalog.english'
+{% if (inventory_hostname in groups.dbmaster) %}
+archive_mode = on
+archive_command = 'cp %p /var/lib/postgresql/9.6/main/archive/%f'
+{% endif %}

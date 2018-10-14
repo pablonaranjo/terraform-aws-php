@@ -75,6 +75,9 @@
   template:
     src: recovery.conf.j2
     dest: /var/lib/postgresql/9.6/main/recovery.conf
+    owner: postgres
+    group: postgres
+    mode: 0600
 
 - name: Start postgres dbslave
   systemd:
